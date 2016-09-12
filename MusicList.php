@@ -33,11 +33,15 @@ if(isset($_GET["add"])){
   try {
     $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
 
-    $sql = 'INSERT INTO musiclist (username,sdate,message) VALUES(:username,:sdate,:message)';
+    $sql = 'INSERT INTO musiclist (SongName,Artist,album,ReleaseDate,ListDBID,previewUrl,imageUrl) VALUES(:SongName,:Artist,:album,:ReleaseDate,:ListDBID,:previewUrl,:imageUrl)';
     $stmt = $dsn->prepare($sql);
-    $stmt->bindParam(':username',$username);
-    $stmt->bindParam(':sdate',$sdate);
-    $stmt->bindParam(':message',$message);
+    $stmt->bindParam(':SongName',$result["results"][$_GET["add"]]["trackName"]);
+    $stmt->bindParam(':Artist',$result["results"][$_GET["add"]]["artistName"]);
+    $stmt->bindParam(':album',$result["results"][$_GET["add"]]["collectionName"]);
+    $stmt->bindParam(':ReleaseDate',$result["results"][$_GET["add"]]["releaseDate"]);
+    $stmt->bindParam(':ListDBID',$_GET["alphabet"]);
+    $stmt->bindParam(':previewUrl',$result["results"][$_GET["add"]]["previewUrl"]);
+    $stmt->bindParam(':imageUrl',$result["results"][$_GET["add"]]["artworkUrl30"]);
     $stmt->execute();
     while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
       echo'<option value="'.$task['id'].$select.'">'.$task['ListName'].'</option>';
@@ -85,8 +89,6 @@ if(isset($_GET["add"])){
         }
         $dsn=NULL;
          ?>
-        <option value="B">B</option> 　
-        <option value="C">C</option>
       </select></br>
   <button type="button"onclick="location.href='list.php'">マイリストへ</button></br><?php //list.phpへのリンク?>
   </div>
