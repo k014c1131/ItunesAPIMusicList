@@ -1,0 +1,17 @@
+音楽データの追加/削除
+
+：音楽の追加
+
+INSERT INTO "List"(Song,Artist,Album,ReleaseDate) VALUES() SELECT * FROM "List"
+※ 音楽データの追加。
+
+
+：音楽の削除
+
+DELETE SELECT * FROM "List" WHERE SongName=""
+※ 曲をどう参照するか?これは音楽名を参照する方法
+
+DROP TABLE "List"
+※ リストの削除 あとで同じリストを作ることができる。
+
+:"List" = MusicListDB
