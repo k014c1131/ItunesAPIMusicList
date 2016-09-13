@@ -1,28 +1,52 @@
 <?php
+//session_start();
 $name="";
 $error="";
-if (isset($_GET["name"])) {
-  $name = $_GET["name"];
+$dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
+$user='root';
+$password ='';
+$ListDBID=2;
+if(isset($_GET['delete'])){//デリート部分
+  $deleteNo = $_GET['delete'];
 
-  if ($name==="") {
-    $error = "IDを入力してください";
-  } else {
-    $base_url = 'https://itunes.apple.com/search?term='.$name.'&media=music&entity=song&country=jp&lang=ja_jp&limit=10 ';
-    $proxy = array(
-      "http" => array(
-       "proxy" => "tcp://proxy.kmt.neec.ac.jp:8080",
-       'request_fulluri' => true,
-      ),
-    );
-    $proxy_context = stream_context_create($proxy);
-    $response = file_get_contents(
-                      $base_url,
-                      false,
-                      $proxy_context
-                );
-    $result = json_decode($response,true);
-  }
+  $deleteNo = htmlspecialchars($deleteNo,ENT_QUOTES);
+
+
+
+try {
+  $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';
+  $user = 'root';
+  $password = '';
+
+  $dsn = new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
+  //$dbn->query('SET NAMES utf8');
+
+  $sql = 'DELETE FROM  musiclist WHERE id = :delete';
+  $stmt = $dsn->prepare($sql);
+  $stmt->bindParam(':delete',$deleteNo);
+  $stmt->execute();
+
+  $dsn=NULL;
+} catch (Exception $e) {
+  print('データの更新に失敗しました!!<br>');
 }
+}
+
+try {
+  $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';
+  $user = 'root';
+  $password = '';
+  $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
+
+  $sql = 'SELECT * FROM musiclist WHERE ListDBID = :id';
+  $stmt = $dsn->prepare($sql);
+  $stmt->bindParam(':id',$ListDBID);
+  $stmt->execute();
+
+} catch (Exception $ex) {
+  print('データの追加に失敗しました<br>');
+}
+$dsn=NULL;
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -33,9 +57,8 @@ if (isset($_GET["name"])) {
 </head>
 
 <body>
-  <?php //print_r($response); ?>
+  <form action="ListName.php" method="get">
   <input type="button" value="戻る" onclick="location.href='list.php'"></span>
-  </form>
   <table  cellspacing="0" cellpadding="5" bordercolor="#333333">
     <tr>
       <th bgcolor="#FFFFFF"></th>
@@ -50,22 +73,23 @@ if (isset($_GET["name"])) {
     </tr>
 
   <hr>
-  <?php if($name!=""){
-    foreach ($result["results"] as $key => $value){
-        print('<tr>');
-        print('<td bgcolor="#FFFFFF" align="right" nowrap><img src="'.$result["results"][$key]["artworkUrl30"].'"></td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["trackName"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["artistName"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["collectionName"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["releaseDate"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300"><audio  src="'.$result["results"][$key]["previewUrl"].'" controls></td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="70"><button type="submit" name="button" value="'.$key.'">登録</button><input type="submit" name="button" value="'.$key.'"></td>');
-        print('</tr>');
+  <?php if(isset($stmt)){
+    while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      print('<tr>');
+      print('<td bgcolor="#FFFFFF" align="right" nowrap><img src="'.$task["imageUrl"].'"></td>');
+      print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$task["SongName"].'</td>');
+      print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$task["Artist"].'</td>');
+      print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$task["album"].'</td>');
+      print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$task["ReleaseDate"].'</td>');
+      print('<td bgcolor="#FFFFFF" valign="top" width="300"><audio  src="'.$task["previewUrl"].'" controls></td>');
+      print('<td bgcolor="#FFFFFF" valign="top" width="6%" height="30"><button type="submit" name="delete" value="'.$task["id"].'">delete</button></td>');
+      print('</tr>');
+
     }
   }
     ?>
 
-</table>
-
+  </table>
+  </form>
 </body>
 </html>

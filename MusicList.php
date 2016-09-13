@@ -6,8 +6,12 @@ if(isset($_SESSION["name"])){
 }
 $error="";
 $select=0;
+$Displayedresults=10;
 if(isset($_GET["alphabet"])){
   $select = $_GET["alphabet"];
+}
+if(isset($_GET["Displayedresults"])){
+  $Displayedresults =$_GET["Displayedresults"];
 }
 if (isset($_GET["name"])) {
   if(""!=$_GET["name"]){//空文字の時は処理しない
@@ -16,7 +20,7 @@ if (isset($_GET["name"])) {
   $name = htmlspecialchars($name,ENT_QUOTES);
   $name = str_replace(" ", "　",$name);//APIの仕様のため半角スペースを全角に変更
   $_SESSION["name"] = $name;//ここで検索ワードの引き継ぎをする
-    $base_url = 'https://itunes.apple.com/search?term='.$name.'&media=music&entity=song&country=jp&lang=ja_jp&limit=10 ';
+    $base_url = 'https://itunes.apple.com/search?term='.$name.'&media=music&entity=song&country=jp&lang=ja_jp&limit='.$Displayedresults.' ';
     $proxy = array(
       "http" => array(
        "proxy" => "tcp://proxy.kmt.neec.ac.jp:8080",
@@ -48,9 +52,7 @@ if(isset($_GET["add"])){
     $stmt->bindParam(':previewUrl',$result["results"][$_GET["add"]]["previewUrl"]);
     $stmt->bindParam(':imageUrl',$result["results"][$_GET["add"]]["artworkUrl30"]);
     $stmt->execute();
-    while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      echo'<option value="'.$task['id'].$select.'">'.$task['ListName'].'</option>';
-    }
+    header("Location: MusicList.php?name=&Displayedresults=".$Displayedresults."&alphabet=".$select);
   } catch (Exception $ex) {
     print('データの追加に失敗しました<br>');
   }
@@ -113,7 +115,7 @@ if(isset($_GET["add"])){
       <th bgcolor="#FFFFFF" width="200">アルバム</th>
       <th bgcolor="#FFFFFF" width="200">発売日</th>
       <th bgcolor="#FFFFFF">試聴</th>
-      <th bgcolor="#FFFFFF" width="100"></th>
+      <th bgcolor="#FFFFFF" ></th>
 
 
     </tr>
@@ -128,7 +130,7 @@ if(isset($_GET["add"])){
         print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["collectionName"].'</td>');
         print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["releaseDate"].'</td>');
         print('<td bgcolor="#FFFFFF" valign="top" width="300"><audio  src="'.$result["results"][$key]["previewUrl"].'" controls></td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="100"><button type="submit" name="add" value="'.$key.'">登録</button></td>');
+        print('<td bgcolor="#FFFFFF" valign="top" width="6%" height="30"><button type="submit" name="add" value="'.$key.'">登録</button></td>');
         print('</tr>');
     }
   }
