@@ -17,6 +17,9 @@
       print('リストの追加に失敗しました<br>');
     }
     $dsn=NULL;
+    header("Location: list.php");
+    exit();
+
   }else if(isset($_GET['delete'])){   //リストをデリートする部分
       $deleteNo = $_GET['delete'];
       $deleteNo = htmlspecialchars($deleteNo,ENT_QUOTES);
@@ -98,8 +101,9 @@ th {
           $stmt = $dsn->prepare($sql);
           $stmt->execute();
           while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo '<tr><td>'.$task['ListName'].' '.$task['createDate'].'</td>';
-            echo '<td align="right"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '"></form></td></tr>';
+            echo '<tr><td><a href="ListName.php?List='.$task['id'].'">'.$task['ListName'].' '.$task['createDate'].'</td></a>';
+            echo '<td align="right"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '"";></form></td></tr>';
+
           }
 
         } catch (Exception $ex) {
