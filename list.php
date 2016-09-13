@@ -40,7 +40,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <font size="5"><title>List</title></font>
+        <title>List</title>
         <style type="text/css">
         table , td, th {
           width: 90%;
