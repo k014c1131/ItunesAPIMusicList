@@ -1,7 +1,9 @@
 <?php
+
+  //createボタンが押されたらDBにnameとdateを作成
   if (isset($_GET['create'])) {
     $name = $_GET['text'];
-    $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
+    $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';
     $user='root';
     $password ='';
       try {
@@ -15,18 +17,34 @@
       print('リストの追加に失敗しました<br>');
     }
     $dsn=NULL;
-  }
-?>
+  }else if(isset($_GET['delete'])){   //リストをデリートする部分
+      $deleteNo = $_GET['delete'];
+      $deleteNo = htmlspecialchars($deleteNo,ENT_QUOTES);
+      $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';
+      $user = 'root';
+      $password = '';
+      try {
+        $dsn = new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
 
+        $sql = 'DELETE FROM  list WHERE id = :delete';
+        $stmt = $dsn->prepare($sql);
+        $stmt->bindParam(':delete',$deleteNo);
+        $stmt->execute();
+        $dsn=NULL;
+    } catch (Exception $e) {
+      print('データの削除に失敗しました!!<br>');
+    }
+}
+?>
 
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>List</title>
+        <font size="5"><title>List</title></font>
         <style type="text/css">
         table , td, th {
           width: 90%;
-          border: 1px solid #595959;
+          border: 2px solid #595959;
 	        border-collapse: collapse;
           }
           td, th  {
@@ -36,7 +54,6 @@
 }
 th {
 	background: #f0e6cc;
-
 }
 .even {
 	background: #fbf8f0;
@@ -44,6 +61,7 @@ th {
 .odd {
 	background: #fefcf9;
 }
+
 </style>
     </head>
     <body>
@@ -68,8 +86,8 @@ th {
       <table>
 	<tbody>
 
-
       <?php
+      //DBから取ってきた値を表示
         $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
         $user='root';
         $password ='';
@@ -81,20 +99,18 @@ th {
           $stmt->execute();
           while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo '<tr><td>'.$task['ListName'].' '.$task['createDate'].'</td>';
-            echo '<td align="right"><input type="button" value="Delete" onclick="history.back()"></td></tr>';
-//            echo '<form method="get" class="log" action="list.php" >';
+            echo '<td align="right"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '"></form></td></tr>';
           }
 
         } catch (Exception $ex) {
           print('リストの追加に失敗しました<br>');
-        }
+
+      }
         $dsn=NULL;
   ?>
 
 	</tbody>
-
       </table>
       </div>
   </body>
-
 </html>
