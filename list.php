@@ -43,11 +43,11 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>List</title>
+    <title>List</title>
         <style type="text/css">
         table , td, th {
           width: 90%;
-          border: 2px solid #595959;
+          border: 3px solid #595959;
 	        border-collapse: collapse;
           }
           td, th  {
@@ -74,7 +74,7 @@ th {
       <input type="button" value="Back" onclick="location.href='MusicList.php'" style="text-align:left;">
 
     </div>
-      List
+      <font size="5">List</font>
       <RIGHT>
         <div style="float:right;">
       <form action="list.php" method="get"><input type="text" name="text">
