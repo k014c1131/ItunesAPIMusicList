@@ -1,3 +1,24 @@
+<?php
+  if (isset($_GET['create'])) {
+    $name = $_GET['text'];
+    $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
+    $user='root';
+    $password ='';
+      try {
+      $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
+      $sql = 'INSERT INTO list(ListName, createDate) VALUES(:name, :date)';
+      $stmt = $dsn->prepare($sql);
+      $stmt->bindValue(':name', $name);
+      $stmt->bindValue(':date', date('Y-m-d'));
+      $stmt->execute();
+    } catch (Exception $ex) {
+      print('リストの追加に失敗しました<br>');
+    }
+    $dsn=NULL;
+  }
+?>
+
+
 <!DOCTYPE HTML>
 <html>
     <head>
@@ -35,8 +56,8 @@ th {
       List
       <RIGHT>
         <div style="float:right;">
-      <INPUT type="text" name="text">
-      <input type="button" value="Create" onclick="history.back()">
+      <form action="list.php" method="get"><input type="text" name="text">
+      <input type="submit" name="create" value="Create"></form>
 
     </div>
     </RIGHT>
@@ -46,30 +67,29 @@ th {
       <div Align="center">
       <table>
 	<tbody>
-		<tr>
-			<td>   <div Align="right"><input type="button" value="Delete" onclick="history.back()"></div></td>
+
 
       <?php
         $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
         $user='root';
         $password ='';
-        try {
+          try {
           $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
 
           $sql = 'SELECT * FROM list';
           $stmt = $dsn->prepare($sql);
           $stmt->execute();
           while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo'<label>'.$task['ListName'].' '.$task['createDate'].'</label>';
-            echo'<form method="get" class="log" action="list.php" >';
+            echo '<tr><td>'.$task['ListName'].' '.$task['createDate'].'</td>';
+            echo '<td align="right"><input type="button" value="Delete" onclick="history.back()"></td></tr>';
+//            echo '<form method="get" class="log" action="list.php" >';
           }
 
         } catch (Exception $ex) {
           print('リストの追加に失敗しました<br>');
         }
         $dsn=NULL;
-         ?>
-		</tr>
+  ?>
 
 	</tbody>
 
