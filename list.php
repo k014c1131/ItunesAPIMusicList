@@ -1,7 +1,9 @@
 <?php
 
   //createボタンが押されたらDBにnameとdateを作成
+
   if (isset($_GET['create'])) {
+    if('text' != 0){
     $name = $_GET['text'];
     $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';
     $user='root';
@@ -19,6 +21,7 @@
     $dsn=NULL;
     header("Location: list.php");
     exit();
+  }
 
   }else if(isset($_GET['delete'])){   //リストをデリートする部分
       $deleteNo = $_GET['delete'];
