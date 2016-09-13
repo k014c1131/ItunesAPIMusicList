@@ -1,11 +1,14 @@
 <?php
-//session_start();
+
 $name="";
 $error="";
 $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
 $user='root';
 $password ='';
-$ListDBID=2;
+$ListDBID=1;
+ if(isset($_GET["List"])){
+  $ListDBID=$_GET["List"];
+}
 if(isset($_GET['delete'])){//デリート部分
   $deleteNo = $_GET['delete'];
 
