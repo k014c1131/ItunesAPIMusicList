@@ -83,7 +83,7 @@ $dsn=NULL;
 <body>
   <form action="ListName.php" method="get">
 
-  <input type="button" value="戻る" onclick="location.href='list.php'"></span>
+  <input type="button" value="Back" onclick="location.href='list.php'"></span>
   <table  cellspacing="0" cellpadding="5" bordercolor="#333333">
     <tr>
       <th bgcolor="#FFFFFF"></th>
