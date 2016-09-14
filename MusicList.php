@@ -47,6 +47,7 @@ if(isset($_GET["add"])){
     $stmt->bindParam(':SongName',$result["results"][$_GET["add"]]["trackName"]);
     $stmt->bindParam(':Artist',$result["results"][$_GET["add"]]["artistName"]);
     $stmt->bindParam(':album',$result["results"][$_GET["add"]]["collectionName"]);
+    $result["results"][$key]["releaseDate"] = substr($result["results"][$key]["releaseDate"], 0, 10);
     $stmt->bindParam(':ReleaseDate',$result["results"][$_GET["add"]]["releaseDate"]);
     $stmt->bindParam(':ListDBID',$_GET["alphabet"]);
     $stmt->bindParam(':previewUrl',$result["results"][$_GET["add"]]["previewUrl"]);
