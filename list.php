@@ -104,7 +104,7 @@ th {
           $stmt = $dsn->prepare($sql);
           $stmt->execute();
           while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo '<tr><td><a href="ListName.php?List='.$task['id'].'">'.$task['ListName'].'</td></a>';
+            echo '<tr><td><a href="ListName.php?List='.$task['id'].'&Listname='.$task['ListName'].'">'.$task['ListName'].'</td></a>';
             echo '<td align="center"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td></tr>';
           }
 
