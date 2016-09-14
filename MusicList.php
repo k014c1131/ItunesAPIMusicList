@@ -66,7 +66,22 @@ if(isset($_GET["add"])){
 <head>
   <meta charset="UTF-8">
   <title>音楽検索</title>
-  </script>
+  <style type="text/css">
+  table{width: 100%;
+  border: 3px solid #000;
+  border-collapse:collapse;
+  }
+  td{
+    padding-right: 10px;
+    border-bottom: 1px solid #000;
+  }
+  th{
+    border-bottom: 3px solid #000;
+    white-space: nowrap;
+  }
+
+
+</style>
 </head>
 
 <body>
@@ -75,11 +90,18 @@ if(isset($_GET["add"])){
     検索ワード:<input type="text" name="name" >
     <input type="submit" value="検索"><span id="err" style="color: red;"> <?= $error ?></span>
     表示件数：<select name="Displayedresults">
-      <option value="10">10件</option>
-      <option value="50">50件</option>
-      <option value="100">100件</option>
+      <?php
+      $array = array(10, 50, 100);
+      for ($i=0; $i < 3; $i++) {
+        if($Displayedresults==$array[$i]){
+            echo'<option value="'.$array[$i].'" selected>'.$array[$i].'件</option>';
+        }else{
+            echo'<option value="'.$array[$i].'">'.$array[$i].'件</option>';
+        }
+      }
+      ?>
     </select>
-  <div align="right">
+
       登録するリスト：<select name="alphabet">
         <?php
         $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
@@ -105,17 +127,18 @@ if(isset($_GET["add"])){
         $dsn=NULL;
          ?>
       </select></br>
+      <div align="right">
   <button type="button"onclick="location.href='list.php'">マイリストへ</button></br><?php //list.phpへのリンク?>
   </div>
-  <table  cellspacing="0" cellpadding="5" bordercolor="#333333" width="1000" height="100%">
+  <table>
     <tr>
-      <th bgcolor="#FFFFFF" ></th>
-      <th bgcolor="#FFFFFF" width="150">曲名</th>
-      <th bgcolor="#FFFFFF" width="200">アーティスト</th>
-      <th bgcolor="#FFFFFF" width="200">アルバム</th>
-      <th bgcolor="#FFFFFF" width="200">発売日</th>
-      <th bgcolor="#FFFFFF">試聴</th>
-      <th bgcolor="#FFFFFF" ></th>
+      <th></th>
+      <th>曲名</th>
+      <th>アーティスト</th>
+      <th>アルバム</th>
+      <th>発売日</th>
+      <th>試聴</th>
+      <th></th>
 
 
     </tr>
@@ -123,14 +146,15 @@ if(isset($_GET["add"])){
   <hr>
   <?php if(isset($result)){
     foreach ($result["results"] as $key => $value){
+        $result["results"][$key]["releaseDate"] = substr($result["results"][$key]["releaseDate"], 0, 10);
         print('<tr>');
-        print('<td bgcolor="#FFFFFF" align="right" nowrap><img src="'.$result["results"][$key]["artworkUrl30"].'"></td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["trackName"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["artistName"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["collectionName"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300">'.$result["results"][$key]["releaseDate"].'</td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="300"><audio  src="'.$result["results"][$key]["previewUrl"].'" controls></td>');
-        print('<td bgcolor="#FFFFFF" valign="top" width="6%" height="30"><button type="submit" name="add" value="'.$key.'">登録</button></td>');
+        print('<td><img src="'.$result["results"][$key]["artworkUrl30"].'"></td>');
+        print('<td>'.$result["results"][$key]["trackName"].'</td>');
+        print('<td>'.$result["results"][$key]["artistName"].'</td>');
+        print('<td>'.$result["results"][$key]["collectionName"].'</td>');
+        print('<td>'.$result["results"][$key]["releaseDate"].'</td>');
+        print('<td><audio  src="'.$result["results"][$key]["previewUrl"].'" controls></td>');
+        print('<td nowrap><button type="submit" name="add" value="'.$key.'">登録</button></td>');
         print('</tr>');
     }
   }
