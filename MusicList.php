@@ -34,6 +34,7 @@ if (isset($_GET["name"])) {
                       $proxy_context
                 );
     $result = json_decode($response,true);
+
 }
 if(isset($_GET["add"])){
   $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
@@ -41,13 +42,12 @@ if(isset($_GET["add"])){
   $password ='';
   try {
     $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
-
     $sql = 'INSERT INTO musiclist (SongName,Artist,album,ReleaseDate,ListDBID,previewUrl,imageUrl) VALUES(:SongName,:Artist,:album,:ReleaseDate,:ListDBID,:previewUrl,:imageUrl)';
     $stmt = $dsn->prepare($sql);
     $stmt->bindParam(':SongName',$result["results"][$_GET["add"]]["trackName"]);
     $stmt->bindParam(':Artist',$result["results"][$_GET["add"]]["artistName"]);
     $stmt->bindParam(':album',$result["results"][$_GET["add"]]["collectionName"]);
-    $result["results"][$key]["releaseDate"] = substr($result["results"][$key]["releaseDate"], 0, 10);
+    $result["results"][$_GET["add"]]["releaseDate"] = substr($result["results"][$_GET["add"]]["releaseDate"], 0, 10);
     $stmt->bindParam(':ReleaseDate',$result["results"][$_GET["add"]]["releaseDate"]);
     $stmt->bindParam(':ListDBID',$_GET["alphabet"]);
     $stmt->bindParam(':previewUrl',$result["results"][$_GET["add"]]["previewUrl"]);
