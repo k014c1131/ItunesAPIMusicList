@@ -56,7 +56,22 @@ $dsn=NULL;
 <head>
   <meta charset="UTF-8">
   <title>音楽検索</title>
-  </script>
+  <style type="text/css">
+  table{width: 100%;
+  border: 3px solid #000;
+  border-collapse:collapse;
+  }
+  td{
+    padding-right: 10px;
+    border-bottom: 1px solid #000;
+  }
+  th{
+    border-bottom: 3px solid #000;
+    white-space: nowrap;
+  }
+
+
+</style>
 </head>
 
 <body>
