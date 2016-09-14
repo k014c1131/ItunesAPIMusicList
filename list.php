@@ -52,11 +52,13 @@
           width: 90%;
           border: 3px solid #595959;
 	        border-collapse: collapse;
+
           }
           td, th  {
 	          padding: 3px;
 	          width: 90%;
             height: 50px;
+
 }
 th {
 	background: #f0e6cc;
@@ -94,6 +96,7 @@ th {
 
       <?php
       //DBから取ってきた値を表示
+      //各リスト内の列数を数えて表示(listテーブルのidとmusiclistテーブルのidが同じもの)
         $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
         $user='root';
         $password ='';
@@ -104,7 +107,12 @@ th {
           $stmt = $dsn->prepare($sql);
           $stmt->execute();
           while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo '<tr><td><a href="ListName.php?List='.$task['id'].'&Listname='.$task['ListName'].'">'.$task['ListName'].'</td></a>';
+            $sql2 = 'SELECT COUNT(*) AS num FROM musiclist WHERE ListDBID = :id';
+            $stmt2 = $dsn->prepare($sql2);
+            $stmt2->bindValue(':id', $task['id']);
+            $stmt2->execute();
+            $task2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+            echo '<tr><td><a href="ListName.php?List='.$task['id'].'&Listname='.$task['ListName'].'">'.$task['ListName'] . " " . $task2['num'] . '曲</td></a>';
             echo '<td align="center"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td></tr>';
           }
 
