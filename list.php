@@ -10,10 +10,9 @@
     $password ='';
       try {
       $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
-      $sql = 'INSERT INTO list(ListName, createDate) VALUES(:name, :date)';
+      $sql = 'INSERT INTO list(ListName) ';
       $stmt = $dsn->prepare($sql);
       $stmt->bindValue(':name', $name);
-      $stmt->bindValue(':date', date('Y-m-d'));
       $stmt->execute();
     } catch (Exception $ex) {
       print('リストの追加に失敗しました<br>');
@@ -48,6 +47,7 @@
     <head>
     <title>List</title>
         <style type="text/css">
+        a { text-decoration: none; }
         table , td, th {
           width: 90%;
           border: 3px solid #595959;
@@ -104,8 +104,8 @@ th {
           $stmt = $dsn->prepare($sql);
           $stmt->execute();
           while($task = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            echo '<tr><td><a href="ListName.php?List='.$task['id'].'">'.$task['ListName'].' '.$task['createDate'].'</td></a>';
-            echo '<td align="right"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '"";></form></td></tr>';
+            echo '<tr><td><a href="ListName.php?List='.$task['id'].'">'.$task['ListName'].'</td></a>';
+            echo '<td align="center"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td></tr>';
 
           }
 
