@@ -79,9 +79,8 @@ if(isset($_GET["add"])){
   th{
     border-bottom: 3px solid #000;
     white-space: nowrap;
+    background-color: #c8dfeb;
   }
-
-
 </style>
 </head>
 
