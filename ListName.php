@@ -1,9 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION["name"])){
-  $name=$_SESSION["name"];//検索ワードの引き継ぎ
-}
-$name="";
+$Listname="";
 $error="";
 $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
 $user='root';
@@ -12,8 +9,16 @@ $ListDBID=0;
  if(isset($_GET["List"])){
   $ListDBID=$_GET["List"];
   $_SESSION["List"]=$_GET["List"];
-}if(isset($_SESSION["List"])){
+}
+if(isset($_SESSION["List"])){
   $ListDBID=$_SESSION["List"];//検索ワードの引き継ぎ
+}
+if(isset($_GET["Listname"])){
+ $Listname=$_GET["Listname"];
+ $_SESSION["Listname"]=$_GET["Listname"];
+}
+if(isset($_SESSION["Listname"])){
+  $Listname=$_SESSION["Listname"];//検索ワードの引き継ぎ
 }
 if(isset($_GET['delete'])){//デリート部分
   $deleteNo = $_GET['delete'];
@@ -74,8 +79,8 @@ $dsn=NULL;
   th{
     border-bottom: 3px solid #000;
     white-space: nowrap;
+    background-color: #c8dfeb;
   }
-
 
 </style>
 </head>
@@ -84,6 +89,9 @@ $dsn=NULL;
   <form action="ListName.php" method="get">
 
   <input type="button" value="Back" onclick="location.href='list.php'"></span>
+  <?php
+  print('<center><font size="5" name="Listname" value="'.$Listname.'">'.$Listname.'</font></center>')
+  ?>
   <table  cellspacing="0" cellpadding="5" bordercolor="#333333">
     <tr>
       <th bgcolor="#FFFFFF"></th>
