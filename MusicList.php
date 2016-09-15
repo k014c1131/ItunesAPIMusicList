@@ -23,15 +23,15 @@ if (isset($_GET["name"])) {
     $base_url = 'https://itunes.apple.com/search?term='.$name.'&media=music&entity=song&country=jp&lang=ja_jp&limit='.$Displayedresults.' ';
     $proxy = array(
       "http" => array(
-       "proxy" => "tcp://proxy.kmt.neec.ac.jp:8080",
+       "proxy" => "tcp://proxy.kmt.neec.ac.jp:8080",//この行でプロキシの設定をしている
        'request_fulluri' => true,
       ),
     );
     $proxy_context = stream_context_create($proxy);
     $response = file_get_contents(
                       $base_url,
-                      false,
-                      $proxy_context
+                      false
+                      ,$proxy_context//プロキシを通さない場合は、この行をコメントアウト
                 );
     $result = json_decode($response,true);
 
@@ -40,24 +40,27 @@ if(isset($_GET["add"])){
   $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
   $user='root';
   $password ='';
-  try {
-    $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
-    $sql = 'INSERT INTO musiclist (SongName,Artist,album,ReleaseDate,ListDBID,previewUrl,imageUrl) VALUES(:SongName,:Artist,:album,:ReleaseDate,:ListDBID,:previewUrl,:imageUrl)';
-    $stmt = $dsn->prepare($sql);
-    $stmt->bindParam(':SongName',$result["results"][$_GET["add"]]["trackName"]);
-    $stmt->bindParam(':Artist',$result["results"][$_GET["add"]]["artistName"]);
-    $stmt->bindParam(':album',$result["results"][$_GET["add"]]["collectionName"]);
-    $result["results"][$_GET["add"]]["releaseDate"] = substr($result["results"][$_GET["add"]]["releaseDate"], 0, 10);
-    $stmt->bindParam(':ReleaseDate',$result["results"][$_GET["add"]]["releaseDate"]);
-    $stmt->bindParam(':ListDBID',$_GET["alphabet"]);
-    $stmt->bindParam(':previewUrl',$result["results"][$_GET["add"]]["previewUrl"]);
-    $stmt->bindParam(':imageUrl',$result["results"][$_GET["add"]]["artworkUrl30"]);
-    $stmt->execute();
-    header("Location: MusicList.php?name=&Displayedresults=".$Displayedresults."&alphabet=".$select);
-  } catch (Exception $ex) {
-    print('データの追加に失敗しました<br>');
+  if(isset($_GET["alphabet"])){
+    try {
+      $dsn= new PDO($dsn,$user,$password,array(PDO::ATTR_ERRMODE => false));
+      $sql = 'INSERT INTO musiclist (SongName,Artist,album,ReleaseDate,ListDBID,previewUrl,imageUrl) VALUES(:SongName,:Artist,:album,:ReleaseDate,:ListDBID,:previewUrl,:imageUrl)';
+      $stmt = $dsn->prepare($sql);
+      $stmt->bindParam(':SongName',$result["results"][$_GET["add"]]["trackName"]);
+      $stmt->bindParam(':Artist',$result["results"][$_GET["add"]]["artistName"]);
+      $stmt->bindParam(':album',$result["results"][$_GET["add"]]["collectionName"]);
+      $result["results"][$_GET["add"]]["releaseDate"] = substr($result["results"][$_GET["add"]]["releaseDate"], 0, 10);
+      $stmt->bindParam(':ReleaseDate',$result["results"][$_GET["add"]]["releaseDate"]);
+      $stmt->bindParam(':ListDBID',$_GET["alphabet"]);
+      $stmt->bindParam(':previewUrl',$result["results"][$_GET["add"]]["previewUrl"]);
+      $stmt->bindParam(':imageUrl',$result["results"][$_GET["add"]]["artworkUrl30"]);
+      $stmt->execute();
+      header("Location: MusicList.php?name=&Displayedresults=".$Displayedresults."&alphabet=".$select);
+    } catch (Exception $ex) {
+      print('データの追加に失敗しました<br>');
+    }
+    $dsn=NULL;
   }
-  $dsn=NULL;
+
 }
 
 
