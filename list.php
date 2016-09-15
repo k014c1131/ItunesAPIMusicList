@@ -74,7 +74,6 @@ th {
     </head>
     <body>
 <div   style="text-align:center;">
-
   <div   style="float:left;">
       <input type="button" value="Back" onclick="location.href='MusicList.php'" style="text-align:left;">
 
@@ -89,9 +88,10 @@ th {
     </RIGHT>
 </div>
       <br>
+      <hr>
       <br>
       <div Align="center">
-      <table>
+        <table>
 	<tbody>
 
       <?php
@@ -112,7 +112,8 @@ th {
             $stmt2->bindValue(':id', $task['id']);
             $stmt2->execute();
             $task2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-            echo '<tr><td><a href="ListName.php?List='.$task['id'].'&Listname='.$task['ListName'].'">'.$task['ListName'] . " " . $task2['num'] . '曲</td></a>';
+            echo '<tr><td><a href="ListName.php?List='.$task['id'].'&Listname='.$task['ListName'].'">'.$task['ListName'].'</a></td>';
+            echo '<td align="center"><label name="num" value="' . $task2['num'] . '曲";>' . $task2['num'] . '曲</label></form></td>';
             echo '<td align="center"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td></tr>';
           }
 
