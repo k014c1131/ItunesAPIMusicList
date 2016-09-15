@@ -105,6 +105,7 @@ th {
       <?php
       //DBから取ってきた値を表示
       //各リスト内の列数を数えて表示(listテーブルのidとmusiclistテーブルのidが同じもの)
+      
         $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
         $user='root';
         $password ='';
