@@ -35,9 +35,17 @@
         $stmt = $dsn->prepare($sql);
         $stmt->bindParam(':delete',$deleteNo);
         $stmt->execute();
-        $dsn=NULL;
+
+        $sql3 = 'DELETE FROM  musiclist WHERE ListDBID = :delete';
+        $stmt3 = $dsn->prepare($sql3);
+        $stmt3->bindParam(':delete',$deleteNo);
+        $stmt3->execute();
+        $dsn3=NULL;
+
+
+
     } catch (Exception $e) {
-      print('データの削除に失敗しました!!<br>');
+        print('データの削除に失敗しました!!<br>');
     }
 }
 ?>
@@ -97,6 +105,7 @@ th {
       <?php
       //DBから取ってきた値を表示
       //各リスト内の列数を数えて表示(listテーブルのidとmusiclistテーブルのidが同じもの)
+      
         $dsn ='mysql:dbname=ListDB;host=localhost;charset=utf8';//項目の表示
         $user='root';
         $password ='';
@@ -114,7 +123,9 @@ th {
             $task2 = $stmt2->fetch(PDO::FETCH_ASSOC);
             echo '<tr><td><a href="ListName.php?List='.$task['id'].'&Listname='.$task['ListName'].'">'.$task['ListName'].'</a></td>';
             echo '<td align="center"><label name="num" value="' . $task2['num'] . '曲";>' . $task2['num'] . '曲</label></form></td>';
-            echo '<td align="center"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td></tr>';
+            echo '<td align="center"><form method="get" action="list.php"><input type="submit" value="delete"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td>';
+            // echo '<td align="center"><form method="get" action="MusicList.php"><input type="hidden" name="delete" value="' . $task['id'] . '";></form></td></tr>';
+
           }
 
         } catch (Exception $ex) {
